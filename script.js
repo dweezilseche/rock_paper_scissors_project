@@ -1,75 +1,70 @@
-const choices = ['Rock', 'Paper', 'Scissors']
-let humanScore = 0
-let computerScore = 0
+const choices = ['rock', 'paper', 'scissors'];
+let humanScore = 0;
+let computerScore = 0;
+let round = 0;
+const maxRounds = 5;
 
-function getComputerChoice(){
-    const randomNumber = Math.floor(Math.random() * ( 2 - 0 + 1 ) + 0 )
-    return choices[randomNumber]
+function getComputerChoice() {
+    return choices[Math.floor(Math.random() * choices.length)];
 }
 
-function getHumanChoice(){
-    return prompt('Rock, Paper or Scissors?', '')
-}
-
-function rockPaperScissors(computerChoice, humanChoice){
-    if(computerChoice == humanChoice){
-        console.log(`
-        Computer choice: ${computerChoice}
-        Human choice: ${humanChoice}
-        Draw! Replay the point.
-        --------------------------
-        THE SCORE:
-        Computer ${computerScore} | Human ${humanScore}
-        `)
-        rockPaperScissors(getComputerChoice(), getHumanChoice())
-    }else if(computerChoice == 'Rock' && humanChoice == 'Scissors'){
-        computerScore += 1
-        console.log(`
-        Computer choice: ${computerChoice}
-        Human choice: ${humanChoice}
-        Computer wins!
-        --------------------------
-        THE SCORE:
-        Computer ${computerScore} | Human ${humanScore}
-        `)
-        rockPaperScissors(getComputerChoice(), getHumanChoice())
-    }else if(computerChoice == 'Scissors' && humanChoice == 'Paper'){
-        computerScore += 1
-        console.log(`
-        Computer choice: ${computerChoice}
-        Human choice: ${humanChoice}
-        Computer wins!
-        --------------------------
-        THE SCORE:
-        Computer ${computerScore} | Human ${humanScore}
-        `)
-        rockPaperScissors(getComputerChoice(), getHumanChoice())
-    }else if(computerChoice == 'Paper' && humanChoice == 'Rock'){
-        computerScore += 1
-        console.log(`
-        Computer choice: ${computerChoice}
-        Human choice: ${humanChoice}
-        Computer wins!
-        --------------------------
-        THE SCORE:
-        Computer ${computerScore} | Human ${humanScore}
-        `)
-        rockPaperScissors(getComputerChoice(), getHumanChoice())
-    }else{
-        humanScore += 1
-        console.log(`
-        Computer choice: ${computerChoice}
-        Human choice: ${humanChoice}
-        Human wins!
-        --------------------------
-        THE SCORE:
-        Computer ${computerScore} | Human ${humanScore}
-        `)
-        rockPaperScissors(getComputerChoice(), getHumanChoice())
+function getHumanChoice() {
+    let choice;
+    while (!choices.includes(choice)) {
+        choice = prompt('Rock, Paper, or Scissors?').toLowerCase();
     }
+    return choice;
 }
 
-rockPaperScissors(getComputerChoice(), getHumanChoice())
+function determineWinner(humanChoice, computerChoice) {
+    const rules = {
+        rock: 'scissors',
+        paper: 'rock',
+        scissors: 'paper',
+    };
+
+    if (humanChoice === computerChoice) {
+        return 'tie';
+    }
+    return rules[humanChoice] === computerChoice ? 'human' : 'computer';
+}
+
+function playRound() {
+    const computerChoice = getComputerChoice();
+    const humanChoice = getHumanChoice();
+
+    console.log(`You chose: ${humanChoice}`);
+    console.log(`Computer chose: ${computerChoice}`);
+
+    const winner = determineWinner(humanChoice, computerChoice);
+
+    if (winner === 'human') {
+        console.log(`${humanChoice} beats ${computerChoice}. You win!`);
+        humanScore++;
+    } else if (winner === 'computer') {
+        console.log(`${computerChoice} beats ${humanChoice}. Computer wins!`);
+        computerScore++;
+    } else {
+        console.log("It's a tie! Play again.");
+        return; // Ne compte pas ce tour et rejoue
+    }
+
+    round++;
+    console.log(`Score -> You: ${humanScore} | Computer: ${computerScore} | Round: ${round}`);
+}
+
+function playGame() {
+    while (round < maxRounds) {
+        playRound();
+    }
+
+    console.log(`Game Over! ${humanScore > computerScore ? "You win!" : "Computer wins!"}`);
+}
+
+playGame();
+
+
+
 
 
 
@@ -83,10 +78,13 @@ rockPaperScissors(getComputerChoice(), getHumanChoice())
  * Créer une fonction pour récupérer le choix humain
  * Dans la fonction , faire prompt pour récupérer ce choix
  * Faire une fonction qui a pour paramètres les deux fonctions 
- * Vérifier avec des conditions qui gagne
+ * Vérifier avec des conditions qui gagne le round
+ * Si l'humain n'entre rien, alors on repose la question
  * Si robot = humain, on rejoue
  * Si robot = Rock et Humain = Scissors alors robot win
  * Si robot = Scissors et Humain = Paper alors robot win
  * Si robot = Paper et Humain = Rock alors robot win
  * Sinon Humain win
+ * 
+ * Si 
  */
